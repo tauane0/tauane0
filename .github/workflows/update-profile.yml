@@ -1,0 +1,74 @@
+name: Update GitHub Profile
+
+on:
+  # Atualiza quando houver alterações no repositório
+  push:
+    branches:
+      - main
+
+  # Permite executar manualmente pelo GitHub
+  workflow_dispatch:
+
+  # Atualização automática
+  schedule:
+    # Todos os dias às 03:00 UTC
+    # No Brasil (UTC-3): 00:00
+    - cron: "0 3 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-profile:
+    name: Update Profile SVG
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Baixa o conteúdo do seu repositório
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2. Configura Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      # 3. Executa o script que gera o profile.svg
+      - name: Update profile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: tauane0
+        run: |
+          python update_profile.py
+
+      # 4. Verifica se o SVG realmente mudou
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # 5. Salva automaticamente a atualização no GitHub
+      - name: Commit changes
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add .github/assets/profile.svg
+
+          git commit -m "chore: update GitHub profile"
+
+          git push
+
+      # 6. Mostra no log quando não houve alteração
+      - name: No changes
+        if: steps.changes.outputs.changed == 'false'
+        run: |
+          echo "Profile is already up to date."
