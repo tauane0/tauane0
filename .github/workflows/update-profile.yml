@@ -9,10 +9,9 @@ on:
   # Permite executar manualmente pelo GitHub
   workflow_dispatch:
 
-  # Atualização automática
+  # Atualização automática diária
   schedule:
-    # Todos os dias às 03:00 UTC
-    # No Brasil (UTC-3): 00:00
+    # 03:00 UTC = 00:00 no horário de Brasília
     - cron: "0 3 * * *"
 
 permissions:
@@ -24,7 +23,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Baixa o conteúdo do seu repositório
+
+      # 1. Baixa o conteúdo do repositório
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -40,9 +40,8 @@ jobs:
       - name: Update profile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_USERNAME: tauane0
         run: |
-          python update_profile.py
+          python scripts/update_profile.py
 
       # 4. Verifica se o SVG realmente mudou
       - name: Check for changes

@@ -13,32 +13,35 @@ from pathlib import Path
 # ============================================================
 
 USERNAME = "tauane0"
-
 OUTPUT = Path(".github/assets/profile.svg")
 
 
 # ============================================================
 # PROFESSIONAL PROFILE
 # ============================================================
-
+#
 # These are intentionally MANUAL.
 #
-# GitHub activity should be automatic, but your professional
-# positioning should remain under your control.
+# GitHub activity and repository statistics are automatic,
+# but your professional positioning remains under your control.
 #
+
 TECHNOLOGIES = [
     ("HTML", "#7ee7ff"),
     ("CSS", "#e8c8ff"),
     ("JAVASCRIPT", "#ff88cc"),
-    ("REACT", "#7ee7ff"),
-    ("JAVA", "#e8c8ff"),
+    ("PYTHON", "#7ee7ff"),
+    ("REACT", "#e8c8ff"),
+    ("JAVA", "#ff88cc"),
 ]
 
 
-# These are also intentionally MANUAL.
+# These are intentionally MANUAL.
 #
 # A random exercise repository should not automatically become
 # part of your portfolio.
+#
+
 FEATURED_REPOS = [
     "Projeto-Nails.Studio",
     "resturante-flavolo",
@@ -71,13 +74,9 @@ query Profile(
             nodes {
 
                 name
-
                 url
-
                 description
-
                 stargazerCount
-
                 forkCount
 
                 languages(
@@ -93,9 +92,7 @@ query Profile(
                         size
 
                         node {
-
                             name
-
                             color
                         }
                     }
@@ -119,9 +116,7 @@ query Profile(
                     contributionDays {
 
                         date
-
                         contributionCount
-
                         color
                     }
                 }
@@ -140,7 +135,6 @@ def esc(value):
     """
     Escape text before inserting it into the SVG.
     """
-
     return escape(
         str(value),
         quote=True
@@ -155,7 +149,6 @@ def github_graphql(
     token,
     variables
 ):
-
     payload = json.dumps(
         {
             "query": QUERY,
@@ -163,31 +156,17 @@ def github_graphql(
         }
     ).encode("utf-8")
 
-
     request = urllib.request.Request(
-
         "https://api.github.com/graphql",
-
         data=payload,
-
         headers={
-
-            "Authorization":
-                f"Bearer {token}",
-
-            "Accept":
-                "application/vnd.github+json",
-
-            "Content-Type":
-                "application/json",
-
-            "User-Agent":
-                "tauane0-profile-updater",
+            "Authorization": f"Bearer {token}",
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json",
+            "User-Agent": "tauane0-profile-updater",
         },
-
         method="POST"
     )
-
 
     with urllib.request.urlopen(
         request,
@@ -195,7 +174,6 @@ def github_graphql(
     ) as response:
 
         data = json.load(response)
-
 
     if data.get("errors"):
 
@@ -207,8 +185,14 @@ def github_graphql(
             )
         )
 
+    user = data.get("data", {}).get("user")
 
-    return data["data"]["user"]
+    if not user:
+        raise RuntimeError(
+            f"GitHub user '{USERNAME}' was not found."
+        )
+
+    return user
 
 
 # ============================================================
@@ -221,20 +205,14 @@ def build_badges():
 
     x = 114
 
-
     widths = {
-
         "HTML": 48,
-
         "CSS": 48,
-
         "JAVASCRIPT": 82,
-
+        "PYTHON": 62,
         "REACT": 60,
-
         "JAVA": 52,
     }
-
 
     for label, color in TECHNOLOGIES:
 
@@ -243,9 +221,7 @@ def build_badges():
             60
         )
 
-
         result.append(
-
             f"""
             <rect
                 x="{x}"
@@ -272,9 +248,7 @@ def build_badges():
             """
         )
 
-
         x += width + 8
-
 
     return "".join(result)
 
@@ -288,9 +262,7 @@ def build_language_analytics(
 ):
 
     totals = {}
-
     colors = {}
-
 
     # --------------------------------------------------------
     # Calculate language usage
@@ -304,15 +276,10 @@ def build_language_analytics(
             .get("edges", [])
         )
 
-
         for edge in language_data:
 
-            language = (
-                edge["node"]["name"]
-            )
-
+            language = edge["node"]["name"]
             size = edge["size"]
-
 
             totals[language] = (
                 totals.get(
@@ -322,25 +289,16 @@ def build_language_analytics(
                 + size
             )
 
-
             colors[language] = (
-                edge["node"].get(
-                    "color"
-                )
+                edge["node"].get("color")
                 or "#7ee7ff"
             )
 
-
     ranked = sorted(
-
         totals.items(),
-
         key=lambda item: item[1],
-
         reverse=True
-
     )[:8]
-
 
     if not ranked:
 
@@ -350,17 +308,13 @@ def build_language_analytics(
             ("JavaScript", 1)
         ]
 
-
     total = sum(
         value
         for _, value in ranked
     )
 
-
     if total <= 0:
-
         total = 1
-
 
     # --------------------------------------------------------
     # Main bar
@@ -368,9 +322,7 @@ def build_language_analytics(
 
     elements = []
 
-
     elements.append(
-
         """
         <rect
             x="40"
@@ -383,9 +335,7 @@ def build_language_analytics(
         """
     )
 
-
     current_x = 40
-
 
     for language, value in ranked:
 
@@ -395,15 +345,12 @@ def build_language_analytics(
             / total
         )
 
-
         color = colors.get(
             language,
             "#7ee7ff"
         )
 
-
         elements.append(
-
             f"""
             <rect
                 x="{current_x:.2f}"
@@ -416,33 +363,22 @@ def build_language_analytics(
             """
         )
 
-
         current_x += width
-
 
     # --------------------------------------------------------
     # Legend
     # --------------------------------------------------------
 
     positions = [
-
         (45, 576),
-
         (189, 576),
-
         (333, 576),
-
         (477, 576),
-
         (621, 576),
-
         (45, 606),
-
         (189, 606),
-
         (333, 606),
     ]
-
 
     for (
         (language, value),
@@ -458,15 +394,12 @@ def build_language_analytics(
             * 100
         )
 
-
         color = colors.get(
             language,
             "#7ee7ff"
         )
 
-
         elements.append(
-
             f"""
             <circle
                 cx="{cx}"
@@ -498,7 +431,6 @@ def build_language_analytics(
             """
         )
 
-
     return "".join(elements)
 
 
@@ -506,27 +438,21 @@ def build_language_analytics(
 # CONTRIBUTION CALENDAR
 # ============================================================
 
-def build_activity(
-    calendar
-):
+def build_activity(calendar):
 
     weeks = calendar.get(
         "weeks",
         []
     )
 
-
     # GitHub normally returns enough weeks for the year.
     # Keep the latest 53 weeks.
-    weeks = weeks[-53:]
 
+    weeks = weeks[-53:]
 
     elements = []
 
-
-    for week_index, week in enumerate(
-        weeks
-    ):
+    for week_index, week in enumerate(weeks):
 
         for day_index, day in enumerate(
             week["contributionDays"]
@@ -537,21 +463,29 @@ def build_activity(
                 + week_index * 12
             )
 
-
             y = (
                 756
                 + day_index * 12
             )
 
+            contribution_count = day.get(
+                "contributionCount",
+                0
+            )
 
             color = (
                 day.get("color")
                 or "#151525"
             )
 
+            # Give zero-contribution days a consistent
+            # dark background instead of relying only
+            # on the API color.
+
+            if contribution_count == 0:
+                color = "#151525"
 
             elements.append(
-
                 f"""
                 <rect
                     x="{x}"
@@ -561,19 +495,42 @@ def build_activity(
                     rx="2.5"
                     fill="{color}"
                 >
-
                     <title>
                         {esc(day["date"])}:
-                        {day["contributionCount"]}
+                        {contribution_count}
                         contributions
                     </title>
-
                 </rect>
                 """
             )
 
-
     return "".join(elements)
+
+
+# ============================================================
+# CALCULATE CONTRIBUTIONS FROM DAYS
+# ============================================================
+
+def calculate_calendar_contributions(calendar):
+
+    total = 0
+
+    for week in calendar.get(
+        "weeks",
+        []
+    ):
+
+        for day in week.get(
+            "contributionDays",
+            []
+        ):
+
+            total += day.get(
+                "contributionCount",
+                0
+            )
+
+    return total
 
 
 # ============================================================
@@ -588,7 +545,6 @@ def build_project_card(
 
     name = repository["name"]
 
-
     description = (
         repository.get(
             "description"
@@ -596,11 +552,9 @@ def build_project_card(
         or "GitHub project"
     )
 
-
     description = " ".join(
         description.split()
     )
-
 
     if len(description) > 50:
 
@@ -609,14 +563,10 @@ def build_project_card(
             + "..."
         )
 
-
     words = description.split()
 
-
     line1 = ""
-
     line2 = ""
-
 
     for word in words:
 
@@ -625,7 +575,6 @@ def build_project_card(
             + " "
             + word
         ).strip()
-
 
         if len(candidate) <= 30:
 
@@ -639,13 +588,11 @@ def build_project_card(
                 + word
             ).strip()
 
-
     languages = (
         repository
         .get("languages", {})
         .get("edges", [])
     )
-
 
     if languages:
 
@@ -659,9 +606,7 @@ def build_project_card(
 
         primary_language = "PROJECT"
 
-
     return f"""
-
     <a href="{esc(repository["url"])}">
 
         <rect
@@ -676,7 +621,6 @@ def build_project_card(
             stroke-width="1.5"
         />
 
-
         <text
             x="{x + 18}"
             y="950"
@@ -688,7 +632,6 @@ def build_project_card(
             {esc(name[:23])}
         </text>
 
-
         <text
             x="{x + 18}"
             y="974"
@@ -698,7 +641,6 @@ def build_project_card(
         >
             {esc(line1)}
         </text>
-
 
         <text
             x="{x + 18}"
@@ -710,7 +652,6 @@ def build_project_card(
             {esc(line2)}
         </text>
 
-
         <line
             x1="{x + 18}"
             y1="1044"
@@ -720,14 +661,12 @@ def build_project_card(
             stroke-opacity="0.12"
         />
 
-
         <circle
             cx="{x + 23}"
             cy="1063"
             r="5"
             fill="{accent}"
         />
-
 
         <text
             x="{x + 34}"
@@ -739,7 +678,6 @@ def build_project_card(
         >
             {esc(primary_language)}
         </text>
-
 
         <text
             x="{x + 145}"
@@ -753,7 +691,6 @@ def build_project_card(
         </text>
 
     </a>
-
     """
 
 
@@ -761,71 +698,93 @@ def build_project_card(
 # BUILD COMPLETE SVG
 # ============================================================
 
-def build_svg(
-    user
-):
+def build_svg(user):
 
     repositories = (
         user["repositories"]["nodes"]
     )
-
 
     # --------------------------------------------------------
     # GitHub statistics
     # --------------------------------------------------------
 
     stars = sum(
-
         repository["stargazerCount"]
-
-        for repository
-        in repositories
+        for repository in repositories
     )
-
 
     forks = sum(
-
         repository["forkCount"]
-
-        for repository
-        in repositories
+        for repository in repositories
     )
-
 
     repository_count = (
         user["repositories"]
         ["totalCount"]
     )
 
+    contributions_collection = (
+        user["contributionsCollection"]
+    )
 
     commits = (
-        user["contributionsCollection"]
+        contributions_collection
         ["totalCommitContributions"]
     )
 
-
     calendar = (
-        user["contributionsCollection"]
+        contributions_collection
         ["contributionCalendar"]
     )
 
+    # Calculate directly from contribution days.
+    calculated_contributions = (
+        calculate_calendar_contributions(
+            calendar
+        )
+    )
+
+    api_contributions = (
+        calendar.get(
+            "totalContributions",
+            0
+        )
+    )
+
+    # Prefer the calculated value when available.
+    # It should normally match GitHub's total.
+    total_contributions = (
+        calculated_contributions
+        if calculated_contributions > 0
+        else api_contributions
+    )
+
+    print(
+        f"GitHub reports "
+        f"{api_contributions} total contributions."
+    )
+
+    print(
+        f"Calculated from days: "
+        f"{calculated_contributions}."
+    )
+
+    print(
+        f"Commit contributions: "
+        f"{commits}."
+    )
 
     # --------------------------------------------------------
     # Featured repositories
     # --------------------------------------------------------
 
     repositories_by_name = {
-
         repository["name"]:
         repository
-
-        for repository
-        in repositories
+        for repository in repositories
     }
 
-
     featured = []
-
 
     # First use the manually selected
     # portfolio repositories.
@@ -837,13 +796,11 @@ def build_svg(
             .get(name)
         )
 
-
         if repository:
 
             featured.append(
                 repository
             )
-
 
     # If one of them no longer exists,
     # fill the remaining spaces with
@@ -852,22 +809,16 @@ def build_svg(
     for repository in repositories:
 
         if repository in featured:
-
             continue
-
 
         featured.append(
             repository
         )
 
-
         if len(featured) >= 3:
-
             break
 
-
     featured = featured[:3]
-
 
     # --------------------------------------------------------
     # Project cards
@@ -879,39 +830,29 @@ def build_svg(
         531
     ]
 
-
     project_colors = [
         "#7ee7ff",
         "#e8c8ff",
         "#ff88cc"
     ]
 
-
     project_svg = ""
-
 
     for (
         repository,
         x,
         accent
     ) in zip(
-
         featured,
-
         project_positions,
-
         project_colors
     ):
 
         project_svg += build_project_card(
-
             repository,
-
             x,
-
             accent
         )
-
 
     # --------------------------------------------------------
     # Statistics
@@ -948,9 +889,7 @@ def build_svg(
         )
     ]
 
-
     statistics_svg = ""
-
 
     for (
         x,
@@ -973,7 +912,6 @@ def build_svg(
             {value:,}
         </text>
 
-
         <text
             x="{x}"
             y="443"
@@ -988,7 +926,6 @@ def build_svg(
         </text>
 
         """
-
 
     for x in (
         230,
@@ -1009,47 +946,42 @@ def build_svg(
 
         """
 
-
     # ========================================================
     # COMPLETE SVG
     # ========================================================
 
     svg = f"""<!--
-  Tauane Borges - GitHub Profile
+    Tauane Borges - GitHub Profile
 
-  Automatically generated by:
-  scripts/update_profile.py
+    Automatically generated by:
+    scripts/update_profile.py
 
-  GitHub:
-  https://github.com/tauane0
+    GitHub:
+    https://github.com/tauane0
 
-  DO NOT EDIT THIS FILE MANUALLY.
+    DO NOT EDIT THIS FILE MANUALLY.
 -->
 
 <svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="800"
-  height="1184"
-  viewBox="0 0 800 1184"
+    xmlns="http://www.w3.org/2000/svg"
+    width="800"
+    height="1184"
+    viewBox="0 0 800 1184"
 >
 
 <style>
 
 @font-face {{
-
     font-family: Inter;
-
     font-style: normal;
-
     font-weight: 400 900;
-
     font-display: swap;
 
     src:
-      url(
-        https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGkyMZhrib2Bg-4.woff2
-      )
-      format("woff2");
+        url(
+            https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGkyMZhrib2Bg-4.woff2
+        )
+        format("woff2");
 }}
 
 
@@ -1135,57 +1067,57 @@ def build_svg(
 
 .g-dr {{
     animation:
-      drift-r
-      8s
-      ease-in-out
-      infinite;
+        drift-r
+        8s
+        ease-in-out
+        infinite;
 }}
 
 
 .g-dl {{
     animation:
-      drift-l
-      9s
-      ease-in-out
-      infinite
-      .3s;
+        drift-l
+        9s
+        ease-in-out
+        infinite
+        .3s;
 }}
 
 
 .g-du {{
     animation:
-      drift-u
-      7s
-      ease-in-out
-      infinite
-      .6s;
+        drift-u
+        7s
+        ease-in-out
+        infinite
+        .6s;
 }}
 
 
 .g-p {{
     animation:
-      pulse
-      6s
-      ease-in-out
-      infinite;
+        pulse
+        6s
+        ease-in-out
+        infinite;
 }}
 
 
 .g-scan {{
     animation:
-      scan
-      4.5s
-      linear
-      infinite;
+        scan
+        4.5s
+        linear
+        infinite;
 }}
 
 
 .g-ring {{
     animation:
-      ring-pulse
-      4s
-      ease-in-out
-      infinite;
+        ring-pulse
+        4s
+        ease-in-out
+        infinite;
 }}
 
 
@@ -1205,149 +1137,148 @@ def build_svg(
 
 <defs>
 
-  <radialGradient id="g1">
+    <radialGradient id="g1">
 
-    <stop
-      offset="0%"
-      stop-color="rgba(120,40,255,.6)"
-    />
+        <stop
+            offset="0%"
+            stop-color="rgba(120,40,255,.6)"
+        />
 
-    <stop
-      offset="100%"
-      stop-color="rgba(120,40,255,0)"
-    />
+        <stop
+            offset="100%"
+            stop-color="rgba(120,40,255,0)"
+        />
 
-  </radialGradient>
-
-
-  <radialGradient id="g2">
-
-    <stop
-      offset="0%"
-      stop-color="rgba(0,200,220,.5)"
-    />
-
-    <stop
-      offset="100%"
-      stop-color="rgba(0,200,220,0)"
-    />
-
-  </radialGradient>
+    </radialGradient>
 
 
-  <radialGradient id="g3">
+    <radialGradient id="g2">
 
-    <stop
-      offset="0%"
-      stop-color="rgba(220,40,200,.45)"
-    />
+        <stop
+            offset="0%"
+            stop-color="rgba(0,200,220,.5)"
+        />
 
-    <stop
-      offset="100%"
-      stop-color="rgba(220,40,200,0)"
-    />
+        <stop
+            offset="100%"
+            stop-color="rgba(0,200,220,0)"
+        />
 
-  </radialGradient>
-
-
-  <radialGradient id="g4">
-
-    <stop
-      offset="0%"
-      stop-color="rgba(40,120,255,.4)"
-    />
-
-    <stop
-      offset="100%"
-      stop-color="rgba(40,120,255,0)"
-    />
-
-  </radialGradient>
+    </radialGradient>
 
 
-  <radialGradient id="g5">
+    <radialGradient id="g3">
 
-    <stop
-      offset="0%"
-      stop-color="rgba(80,50,220,.35)"
-    />
+        <stop
+            offset="0%"
+            stop-color="rgba(220,40,200,.45)"
+        />
 
-    <stop
-      offset="100%"
-      stop-color="rgba(80,50,220,0)"
-    />
+        <stop
+            offset="100%"
+            stop-color="rgba(220,40,200,0)"
+        />
 
-  </radialGradient>
-
-
-  <linearGradient
-    id="scan-gradient"
-    x1="0%"
-    y1="0%"
-    x2="100%"
-    y2="0%"
-  >
-
-    <stop
-      offset="0%"
-      stop-color="rgba(120,200,255,0)"
-    />
-
-    <stop
-      offset="40%"
-      stop-color="rgba(120,200,255,.12)"
-    />
-
-    <stop
-      offset="50%"
-      stop-color="rgba(160,120,255,.45)"
-    />
-
-    <stop
-      offset="60%"
-      stop-color="rgba(120,200,255,.12)"
-    />
-
-    <stop
-      offset="100%"
-      stop-color="rgba(120,200,255,0)"
-    />
-
-  </linearGradient>
+    </radialGradient>
 
 
-  <pattern
-    id="grid"
-    width="40"
-    height="40"
-    patternUnits="userSpaceOnUse"
-  >
+    <radialGradient id="g4">
 
-    <path
-      d="M40 0L0 0 0 40"
-      fill="none"
-      stroke="rgba(110,80,220,.06)"
-    />
+        <stop
+            offset="0%"
+            stop-color="rgba(40,120,255,.4)"
+        />
 
-  </pattern>
+        <stop
+            offset="100%"
+            stop-color="rgba(40,120,255,0)"
+        />
+
+    </radialGradient>
 
 
-  <filter id="glow">
+    <radialGradient id="g5">
 
-    <feGaussianBlur
-      stdDeviation="2"
-      result="blur"
-    />
+        <stop
+            offset="0%"
+            stop-color="rgba(80,50,220,.35)"
+        />
 
-    <feMerge>
+        <stop
+            offset="100%"
+            stop-color="rgba(80,50,220,0)"
+        />
 
-      <feMergeNode in="blur"/>
+    </radialGradient>
 
-      <feMergeNode in="SourceGraphic"/>
 
-    </feMerge>
+    <linearGradient
+        id="scan-gradient"
+        x1="0%"
+        y1="0%"
+        x2="100%"
+        y2="0%"
+    >
 
-  </filter>
+        <stop
+            offset="0%"
+            stop-color="rgba(120,200,255,0)"
+        />
+
+        <stop
+            offset="40%"
+            stop-color="rgba(120,200,255,.12)"
+        />
+
+        <stop
+            offset="50%"
+            stop-color="rgba(160,120,255,.45)"
+        />
+
+        <stop
+            offset="60%"
+            stop-color="rgba(120,200,255,.12)"
+        />
+
+        <stop
+            offset="100%"
+            stop-color="rgba(120,200,255,0)"
+        />
+
+    </linearGradient>
+
+
+    <pattern
+        id="grid"
+        width="40"
+        height="40"
+        patternUnits="userSpaceOnUse"
+    >
+
+        <path
+            d="M40 0L0 0 0 40"
+            fill="none"
+            stroke="rgba(110,80,220,.06)"
+        />
+
+    </pattern>
+
+
+    <filter id="glow">
+
+        <feGaussianBlur
+            stdDeviation="2"
+            result="blur"
+        />
+
+        <feMerge>
+
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+
+        </feMerge>
+
+    </filter>
 
 </defs>
 
@@ -1357,20 +1288,20 @@ def build_svg(
 <!-- ====================================================== -->
 
 <rect
-  width="800"
-  height="1184"
-  rx="24"
-  fill="#060610"
-  stroke="rgba(110,80,220,.2)"
-  stroke-width="1.5"
+    width="800"
+    height="1184"
+    rx="24"
+    fill="#060610"
+    stroke="rgba(110,80,220,.2)"
+    stroke-width="1.5"
 />
 
 
 <rect
-  width="800"
-  height="1184"
-  rx="24"
-  fill="url(#grid)"
+    width="800"
+    height="1184"
+    rx="24"
+    fill="url(#grid)"
 />
 
 
@@ -1379,164 +1310,164 @@ def build_svg(
 <!-- ====================================================== -->
 
 <ellipse
-  class="g-dr"
-  cx="200"
-  cy="140"
-  rx="180"
-  ry="110"
-  fill="url(#g1)"
+    class="g-dr"
+    cx="200"
+    cy="140"
+    rx="180"
+    ry="110"
+    fill="url(#g1)"
 />
 
 
 <ellipse
-  class="g-dl"
-  cx="620"
-  cy="160"
-  rx="160"
-  ry="95"
-  fill="url(#g2)"
+    class="g-dl"
+    cx="620"
+    cy="160"
+    rx="160"
+    ry="95"
+    fill="url(#g2)"
 />
 
 
 <ellipse
-  class="g-du"
-  cx="420"
-  cy="110"
-  rx="140"
-  ry="90"
-  fill="url(#g3)"
+    class="g-du"
+    cx="420"
+    cy="110"
+    rx="140"
+    ry="90"
+    fill="url(#g3)"
 />
 
 
 <ellipse
-  class="g-p"
-  cx="100"
-  cy="180"
-  rx="120"
-  ry="80"
-  fill="url(#g4)"
+    class="g-p"
+    cx="100"
+    cy="180"
+    rx="120"
+    ry="80"
+    fill="url(#g4)"
 />
 
 
 <rect
-  class="g-scan"
-  x="-200"
-  y="120"
-  width="400"
-  height="40"
-  fill="url(#scan-gradient)"
-  opacity=".35"
+    class="g-scan"
+    x="-200"
+    y="120"
+    width="400"
+    height="40"
+    fill="url(#scan-gradient)"
+    opacity=".35"
 />
 
 
 <circle
-  class="g-ring"
-  cx="400"
-  cy="140"
-  r="120"
-  fill="none"
-  stroke="rgba(120,200,255,.15)"
+    class="g-ring"
+    cx="400"
+    cy="140"
+    r="120"
+    fill="none"
+    stroke="rgba(120,200,255,.15)"
 />
 
 
 <circle
-  class="g-ring"
-  cx="400"
-  cy="140"
-  r="80"
-  fill="none"
-  stroke="rgba(200,120,255,.12)"
+    class="g-ring"
+    cx="400"
+    cy="140"
+    r="80"
+    fill="none"
+    stroke="rgba(200,120,255,.12)"
 />
 
 
 <path
-  d="
-    M30 20V10H45
-    M770 20V10H755
-    M30 260V270H45
-    M770 260V270H755
-  "
-  fill="none"
-  stroke="rgba(126,231,255,.7)"
-  stroke-width="2.5"
+    d="
+        M30 20V10H45
+        M770 20V10H755
+        M30 260V270H45
+        M770 260V270H755
+    "
+    fill="none"
+    stroke="rgba(126,231,255,.7)"
+    stroke-width="2.5"
 />
 
 
 <text
-  x="400"
-  y="92"
-  text-anchor="middle"
-  font-family="Inter,sans-serif"
-  font-size="48"
-  font-weight="900"
-  fill="#fff"
-  letter-spacing="20"
-  filter="url(#glow)"
+    x="400"
+    y="92"
+    text-anchor="middle"
+    font-family="Inter,sans-serif"
+    font-size="48"
+    font-weight="900"
+    fill="#fff"
+    letter-spacing="20"
+    filter="url(#glow)"
 >
-  Tauane Borges
+    Tauane Borges
 </text>
 
 
 <text
-  x="400"
-  y="132"
-  text-anchor="middle"
-  font-family="Inter,sans-serif"
-  font-size="11"
-  fill="rgba(126,231,255,.9)"
-  letter-spacing="6"
-  font-weight="700"
+    x="400"
+    y="132"
+    text-anchor="middle"
+    font-family="Inter,sans-serif"
+    font-size="11"
+    fill="rgba(126,231,255,.9)"
+    letter-spacing="6"
+    font-weight="700"
 >
-  TECH STUDENT | ASPIRING DEVELOPER
+    TECH STUDENT | ASPIRING FRONT-END DEVELOPER
 </text>
 
 
 <line
-  x1="260"
-  y1="150"
-  x2="540"
-  y2="150"
-  stroke="rgba(126,231,255,.25)"
+    x1="260"
+    y1="150"
+    x2="540"
+    y2="150"
+    stroke="rgba(126,231,255,.25)"
 />
 
 
 <text
-  x="400"
-  y="175"
-  text-anchor="middle"
-  font-family="Inter,sans-serif"
-  font-size="10"
-  fill="rgba(232,200,255,.8)"
-  letter-spacing="3"
-  font-weight="600"
+    x="400"
+    y="175"
+    text-anchor="middle"
+    font-family="Inter,sans-serif"
+    font-size="10"
+    fill="rgba(232,200,255,.8)"
+    letter-spacing="3"
+    font-weight="600"
 >
-  FRONT-END DEVELOPMENT | UI
+    FRONT-END DEVELOPMENT | WEB &amp; UI
 </text>
 
 
 <text
-  x="400"
-  y="200"
-  text-anchor="middle"
-  font-family="Inter,sans-serif"
-  font-size="9.5"
-  fill="rgba(126,231,255,.6)"
-  letter-spacing="2"
+    x="400"
+    y="200"
+    text-anchor="middle"
+    font-family="Inter,sans-serif"
+    font-size="9.5"
+    fill="rgba(126,231,255,.6)"
+    letter-spacing="2"
 >
-  WEB DEVELOPMENT | LEARNING JAVA
+    HTML | CSS | JAVASCRIPT | PYTHON | REACT | JAVA
 </text>
 
 
 <text
-  x="400"
-  y="225"
-  text-anchor="middle"
-  font-family="Inter,sans-serif"
-  font-size="9"
-  fill="rgba(100,100,140,.5)"
-  letter-spacing="1.5"
+    x="400"
+    y="225"
+    text-anchor="middle"
+    font-family="Inter,sans-serif"
+    font-size="9"
+    fill="rgba(100,100,140,.5)"
+    letter-spacing="1.5"
 >
-  github.com/{USERNAME}
+    github.com/{USERNAME}
 </text>
 
 
@@ -1545,11 +1476,11 @@ def build_svg(
 <!-- ====================================================== -->
 
 <line
-  x1="28"
-  y1="294"
-  x2="772"
-  y2="294"
-  stroke="rgba(110,80,220,.15)"
+    x1="28"
+    y1="294"
+    x2="772"
+    y2="294"
+    stroke="rgba(110,80,220,.15)"
 />
 
 
@@ -1561,22 +1492,22 @@ def build_svg(
 <!-- ====================================================== -->
 
 <line
-  x1="28"
-  y1="378"
-  x2="772"
-  y2="378"
-  stroke="rgba(110,80,220,.15)"
+    x1="28"
+    y1="378"
+    x2="772"
+    y2="378"
+    stroke="rgba(110,80,220,.15)"
 />
 
 
 <ellipse
-  class="g-dl"
-  cx="400"
-  cy="423"
-  rx="300"
-  ry="55"
-  fill="url(#g1)"
-  opacity=".7"
+    class="g-dl"
+    cx="400"
+    cy="423"
+    rx="300"
+    ry="55"
+    fill="url(#g1)"
+    opacity=".7"
 />
 
 
@@ -1588,34 +1519,34 @@ def build_svg(
 <!-- ====================================================== -->
 
 <line
-  x1="28"
-  y1="502"
-  x2="772"
-  y2="502"
-  stroke="rgba(110,80,220,.15)"
+    x1="28"
+    y1="502"
+    x2="772"
+    y2="502"
+    stroke="rgba(110,80,220,.15)"
 />
 
 
 <ellipse
-  class="g-dr"
-  cx="650"
-  cy="602"
-  rx="180"
-  ry="100"
-  fill="url(#g5)"
+    class="g-dr"
+    cx="650"
+    cy="602"
+    rx="180"
+    ry="100"
+    fill="url(#g5)"
 />
 
 
 <text
-  x="40"
-  y="524"
-  font-family="Inter,sans-serif"
-  font-size="10"
-  fill="rgba(126,231,255,.85)"
-  letter-spacing="4"
-  font-weight="800"
+    x="40"
+    y="524"
+    font-family="Inter,sans-serif"
+    font-size="10"
+    fill="rgba(126,231,255,.85)"
+    letter-spacing="4"
+    font-weight="800"
 >
-  STACK ANALYTICS
+    STACK ANALYTICS
 </text>
 
 
@@ -1627,37 +1558,37 @@ def build_svg(
 <!-- ====================================================== -->
 
 <line
-  x1="28"
-  y1="716"
-  x2="772"
-  y2="716"
-  stroke="rgba(110,80,220,.15)"
+    x1="28"
+    y1="716"
+    x2="772"
+    y2="716"
+    stroke="rgba(110,80,220,.15)"
 />
 
 
 <text
-  x="40"
-  y="738"
-  font-family="Inter,sans-serif"
-  font-size="10"
-  fill="rgba(126,231,255,.85)"
-  letter-spacing="4"
-  font-weight="800"
+    x="40"
+    y="738"
+    font-family="Inter,sans-serif"
+    font-size="10"
+    fill="rgba(126,231,255,.85)"
+    letter-spacing="4"
+    font-weight="800"
 >
-  ACTIVITY PULSE
+    ACTIVITY PULSE
 </text>
 
 
 <text
-  x="760"
-  y="738"
-  text-anchor="end"
-  font-family="Inter,sans-serif"
-  font-size="10"
-  fill="rgba(232,200,255,.65)"
-  font-weight="700"
+    x="760"
+    y="738"
+    text-anchor="end"
+    font-family="Inter,sans-serif"
+    font-size="10"
+    fill="rgba(232,200,255,.65)"
+    font-weight="700"
 >
-  {calendar["totalContributions"]:,} contributions
+    {total_contributions:,} contributions
 </text>
 
 
@@ -1669,35 +1600,35 @@ def build_svg(
 <!-- ====================================================== -->
 
 <line
-  x1="28"
-  y1="890"
-  x2="772"
-  y2="890"
-  stroke="rgba(110,80,220,.15)"
+    x1="28"
+    y1="890"
+    x2="772"
+    y2="890"
+    stroke="rgba(110,80,220,.15)"
 />
 
 
 <ellipse
-  class="g-du"
-  cx="400"
-  cy="1000"
-  rx="260"
-  ry="75"
-  fill="url(#g3)"
-  opacity=".5"
+    class="g-du"
+    cx="400"
+    cy="1000"
+    rx="260"
+    ry="75"
+    fill="url(#g3)"
+    opacity=".5"
 />
 
 
 <text
-  x="40"
-  y="912"
-  font-family="Inter,sans-serif"
-  font-size="10"
-  fill="rgba(126,231,255,.85)"
-  letter-spacing="4"
-  font-weight="800"
+    x="40"
+    y="912"
+    font-family="Inter,sans-serif"
+    font-size="10"
+    fill="rgba(126,231,255,.85)"
+    letter-spacing="4"
+    font-weight="800"
 >
-  PRIMARY DEPLOYMENTS
+    PRIMARY DEPLOYMENTS
 </text>
 
 
@@ -1709,22 +1640,21 @@ def build_svg(
 <!-- ====================================================== -->
 
 <text
-  x="400"
-  y="1168"
-  text-anchor="middle"
-  font-family="Inter,sans-serif"
-  font-size="8.5"
-  fill="rgba(100,100,150,.45)"
-  font-weight="600"
-  letter-spacing="2"
+    x="400"
+    y="1168"
+    text-anchor="middle"
+    font-family="Inter,sans-serif"
+    font-size="8.5"
+    fill="rgba(100,100,150,.45)"
+    font-weight="600"
+    letter-spacing="2"
 >
-  Tauane Borges - Estudante de Análise e Desenvolvimento de Sistemas
+    Tauane Borges - Estudante de Análise e Desenvolvimento de Sistemas
 </text>
 
 
 </svg>
 """
-
 
     return svg
 
@@ -1739,46 +1669,42 @@ def main():
         "GITHUB_TOKEN"
     )
 
-
     if not token:
 
         raise SystemExit(
             "ERROR: GITHUB_TOKEN is not set."
         )
 
-
     now = datetime.now(
         timezone.utc
     )
-
 
     start = (
         now
         - timedelta(days=365)
     )
 
-
     print(
         "Fetching GitHub data..."
     )
 
-
-    user = github_graphql(
-
-        token,
-
-        {
-            "login":
-                USERNAME,
-
-            "from":
-                start.isoformat(),
-
-            "to":
-                now.isoformat()
-        }
+    print(
+        f"Username: {USERNAME}"
     )
 
+    print(
+        f"Period: {start.isoformat()} "
+        f"-> {now.isoformat()}"
+    )
+
+    user = github_graphql(
+        token,
+        {
+            "login": USERNAME,
+            "from": start.isoformat(),
+            "to": now.isoformat()
+        }
+    )
 
     if not user:
 
@@ -1786,26 +1712,22 @@ def main():
             f"GitHub user '{USERNAME}' was not found."
         )
 
-
     OUTPUT.parent.mkdir(
         parents=True,
         exist_ok=True
     )
 
-
     svg = build_svg(
         user
     )
-
 
     OUTPUT.write_text(
         svg,
         encoding="utf-8"
     )
 
-
     print(
-        f"Profile updated successfully:"
+        "Profile updated successfully:"
     )
 
     print(
