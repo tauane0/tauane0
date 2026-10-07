@@ -1123,7 +1123,7 @@
                     fill="#151525"
                 >
                     <title>
-                        2025-10-06:
+                        2025-10-07:
                         0
                         contributions
                     </title>
@@ -1138,7 +1138,7 @@
                     fill="#151525"
                 >
                     <title>
-                        2025-10-07:
+                        2025-10-08:
                         0
                         contributions
                     </title>
@@ -1153,7 +1153,7 @@
                     fill="#151525"
                 >
                     <title>
-                        2025-10-08:
+                        2025-10-09:
                         0
                         contributions
                     </title>
@@ -1168,21 +1168,6 @@
                     fill="#151525"
                 >
                     <title>
-                        2025-10-09:
-                        0
-                        contributions
-                    </title>
-                </rect>
-                
-                <rect
-                    x="55"
-                    y="804"
-                    width="10"
-                    height="10"
-                    rx="2.5"
-                    fill="#151525"
-                >
-                    <title>
                         2025-10-10:
                         0
                         contributions
@@ -1191,7 +1176,7 @@
                 
                 <rect
                     x="55"
-                    y="816"
+                    y="804"
                     width="10"
                     height="10"
                     rx="2.5"
@@ -6599,6 +6584,21 @@
                 >
                     <title>
                         2026-10-06:
+                        0
+                        contributions
+                    </title>
+                </rect>
+                
+                <rect
+                    x="679"
+                    y="792"
+                    width="10"
+                    height="10"
+                    rx="2.5"
+                    fill="#151525"
+                >
+                    <title>
+                        2026-10-07:
                         0
                         contributions
                     </title>
