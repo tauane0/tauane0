@@ -1123,21 +1123,6 @@
                     fill="#151525"
                 >
                     <title>
-                        2025-10-09:
-                        0
-                        contributions
-                    </title>
-                </rect>
-                
-                <rect
-                    x="55"
-                    y="768"
-                    width="10"
-                    height="10"
-                    rx="2.5"
-                    fill="#151525"
-                >
-                    <title>
                         2025-10-10:
                         0
                         contributions
@@ -1146,7 +1131,7 @@
                 
                 <rect
                     x="55"
-                    y="780"
+                    y="768"
                     width="10"
                     height="10"
                     rx="2.5"
@@ -6599,6 +6584,21 @@
                 >
                     <title>
                         2026-10-09:
+                        0
+                        contributions
+                    </title>
+                </rect>
+                
+                <rect
+                    x="679"
+                    y="828"
+                    width="10"
+                    height="10"
+                    rx="2.5"
+                    fill="#151525"
+                >
+                    <title>
+                        2026-10-10:
                         0
                         contributions
                     </title>
