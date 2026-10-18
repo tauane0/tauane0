@@ -41,7 +41,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python scripts/update_profile.py
+          python ./scripts/update_profile.py
 
       # 4. Verifica se o SVG realmente mudou
       - name: Check for changes
