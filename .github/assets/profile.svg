@@ -708,7 +708,7 @@
             font-weight="900"
             fill="#ffffff"
         >
-            2
+            3
         </text>
 
         <text
@@ -762,7 +762,7 @@
             font-weight="900"
             fill="#ffffff"
         >
-            6
+            7
         </text>
 
         <text
@@ -789,7 +789,7 @@
             font-weight="900"
             fill="#ffffff"
         >
-            15
+            16
         </text>
 
         <text
@@ -890,43 +890,43 @@
             <rect
                 x="40.00"
                 y="544"
-                width="452.76"
+                width="452.12"
                 height="8"
                 rx="4"
                 fill="#f1e05a"
             />
             
             <rect
-                x="492.76"
+                x="492.12"
                 y="544"
-                width="131.37"
+                width="131.18"
                 height="8"
                 rx="4"
                 fill="#663399"
             />
             
             <rect
-                x="624.13"
+                x="623.29"
                 y="544"
-                width="71.98"
+                width="72.91"
                 height="8"
                 rx="4"
                 fill="#b07219"
             />
             
             <rect
-                x="696.11"
+                x="696.20"
                 y="544"
-                width="41.06"
+                width="41.00"
                 height="8"
                 rx="4"
                 fill="#3572A5"
             />
             
             <rect
-                x="737.17"
+                x="737.20"
                 y="544"
-                width="22.83"
+                width="22.80"
                 height="8"
                 rx="4"
                 fill="#e34c26"
@@ -1109,7 +1109,7 @@
     fill="rgba(232,200,255,.65)"
     font-weight="700"
 >
-    21 contributions
+    23 contributions
 </text>
 
 
@@ -6580,10 +6580,25 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#151525"
+                    fill="#30a14e"
                 >
                     <title>
                         2026-10-25:
+                        2
+                        contributions
+                    </title>
+                </rect>
+                
+                <rect
+                    x="679"
+                    y="768"
+                    width="10"
+                    height="10"
+                    rx="2.5"
+                    fill="#151525"
+                >
+                    <title>
+                        2026-10-26:
                         0
                         contributions
                     </title>
