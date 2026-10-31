@@ -1123,21 +1123,6 @@
                     fill="#151525"
                 >
                     <title>
-                        2025-10-30:
-                        0
-                        contributions
-                    </title>
-                </rect>
-                
-                <rect
-                    x="55"
-                    y="768"
-                    width="10"
-                    height="10"
-                    rx="2.5"
-                    fill="#151525"
-                >
-                    <title>
                         2025-10-31:
                         0
                         contributions
@@ -1146,7 +1131,7 @@
                 
                 <rect
                     x="55"
-                    y="780"
+                    y="768"
                     width="10"
                     height="10"
                     rx="2.5"
@@ -4075,7 +4060,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#216e39"
+                    fill="#03001c"
                 >
                     <title>
                         2026-05-15:
@@ -4090,7 +4075,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#40c463"
+                    fill="#ffc501"
                 >
                     <title>
                         2026-05-16:
@@ -5875,7 +5860,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#40c463"
+                    fill="#ffc501"
                 >
                     <title>
                         2026-09-12:
@@ -5890,7 +5875,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#40c463"
+                    fill="#ffc501"
                 >
                     <title>
                         2026-09-13:
@@ -5935,7 +5920,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#40c463"
+                    fill="#ffc501"
                 >
                     <title>
                         2026-09-16:
@@ -6010,7 +5995,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#40c463"
+                    fill="#ffc501"
                 >
                     <title>
                         2026-09-21:
@@ -6025,7 +6010,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#40c463"
+                    fill="#ffc501"
                 >
                     <title>
                         2026-09-22:
@@ -6130,7 +6115,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#216e39"
+                    fill="#03001c"
                 >
                     <title>
                         2026-09-29:
@@ -6250,7 +6235,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#216e39"
+                    fill="#03001c"
                 >
                     <title>
                         2026-10-07:
@@ -6265,7 +6250,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#40c463"
+                    fill="#ffc501"
                 >
                     <title>
                         2026-10-08:
@@ -6325,7 +6310,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#40c463"
+                    fill="#ffc501"
                 >
                     <title>
                         2026-10-12:
@@ -6415,7 +6400,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#216e39"
+                    fill="#03001c"
                 >
                     <title>
                         2026-10-18:
@@ -6520,7 +6505,7 @@
                     width="10"
                     height="10"
                     rx="2.5"
-                    fill="#30a14e"
+                    fill="#fe9600"
                 >
                     <title>
                         2026-10-25:
@@ -6599,6 +6584,21 @@
                 >
                     <title>
                         2026-10-30:
+                        0
+                        contributions
+                    </title>
+                </rect>
+                
+                <rect
+                    x="679"
+                    y="828"
+                    width="10"
+                    height="10"
+                    rx="2.5"
+                    fill="#151525"
+                >
+                    <title>
+                        2026-10-31:
                         0
                         contributions
                     </title>
